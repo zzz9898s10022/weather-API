@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            padding: 5% 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            background-color: lightblue;
+        }
+
+        .cards {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background-color: white;
+            width: 20%;
+            border: 2px dashed black;
+            margin: 5px;
+            padding: 5px;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        .timeclock {
+            font-size: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="timeclock"></div>
+        <div class="cards">
+            <!-- <div class="card">
+                <div class="card_photo">
+                    <img src="https://previews.123rf.com/images/shaitan1985/shaitan19851702/shaitan1985170200184/72885496-yellow-sun-icon.jpg"
+                        alt="">
+                </div>
+                <h1>南投市</h1>
+                <h2>天氣</h2>
+                <div>
+                    <span>最高溫：26 </span><br>
+                    <span>最低溫：24 </span>
+                </div>
+                <br>
+                <div>天氣舒適度：舒爽</div>
+            </div>
+            <div class="card">
+                <div class="card_photo">
+                    <img src="https://i.dlpng.com/static/png/1225064--weather-png-512_512_preview.png" alt="">
+                </div>
+                <h1>南投市</h1>
+                <h2>天氣</h2>
+                <div>
+                    <span>最高溫：26 </span><br>
+                    <span>最低溫：24 </span>
+                </div>
+                <br>
+                <div>天氣舒適度：舒爽</div>
+            </div>
+            <div class="card">
+                <div class="card_photo">
+                    <img src="https://cdn.icon-icons.com/icons2/1903/PNG/512/iconfinder-weather-weather-forecast-sunny-rain-climate-3859146_121228.png"
+                        alt="">
+                </div>
+                <h1>南投市</h1>
+                <h2>天氣</h2>
+                <div>
+                    <span>最高溫：26 </span><br>
+                    <span>最低溫：24 </span>
+                </div>
+                <br>
+                <div>天氣舒適度：舒爽</div>
+            </div>
+            <div class="card">
+                <div class="card_photo">
+                    <img src="https://previews.123rf.com/images/sukanda26/sukanda261703/sukanda26170300058/72972741-cloud-and-rain-icon.jpg"
+                        alt="">
+                </div>
+                <h1>南投市</h1>
+                <h2>天氣</h2>
+                <div>
+                    <span>最高溫：26 ℃</span><br>
+                    <span>最低溫：24 ℃</span>
+                </div>
+                <br>
+                <div>天氣舒適度：舒爽</div>
+            </div> -->
+        </div>
+
+
+        <script>
+            fetch('https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-94D4FC1A-2AD5-4AE3-B657-C7A2EC383B0D')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (myJson) {
+
+                    // console.log(myJson);
+                    let locations = myJson.records.location;
+
+                    // console.log(locations);
+                    //下列運算式表示=對container裡面的每一個card下指令，然後針對每項會更動的項目給予定義，就能以簡短的名稱替代原先很長的位址
+                    locations.forEach(element => {
+                        // console.log(element)
+                        let localName = element.locationName;
+                        // console.log(localName)
+                        //地區名稱
+                        let Wx = element.weatherElement[0].time[0].parameter.parameterName;
+                        //天氣狀態
+                        let maxT = element.weatherElement[4].time[0].parameter.parameterName;
+                        //最高溫
+                        let minT = element.weatherElement[2].time[0].parameter.parameterName;
+                        //最低溫
+                        let parameterName = element.weatherElement[3].time[0].parameter.parameterName;
+                        //建議
+                        let Wx_code = element.weatherElement[0].time[0].parameter.parameterValue;
+                        //天氣代碼
+                        //
+                        let weather_logo = "https://previews.123rf.com/images/shaitan1985/shaitan19851702/shaitan1985170200184/72885496-yellow-sun-icon.jpg";
+                        //自定義一個元素，套用下面的網址
+                        if (Wx_code == "1") {
+                            weather_logo = "https://previews.123rf.com/images/shaitan1985/shaitan19851702/shaitan1985170200184/72885496-yellow-sun-icon.jpg"
+                        }
+                        else if (Wx_code == "2" || Wx_code == "3" || Wx_code == "4") {
+                            weather_logo = "https://i.dlpng.com/static/png/1225064--weather-png-512_512_preview.png"
+                        }
+                        else if (Wx_code == "8") {
+                            weather_logo = "https://cdn.icon-icons.com/icons2/1903/PNG/512/iconfinder-weather-weather-forecast-sunny-rain-climate-3859146_121228.png"
+                        }
+                        else {
+                            weather_logo = "https://previews.123rf.com/images/sukanda26/sukanda261703/sukanda26170300058/72972741-cloud-and-rain-icon.jpg"
+                        }
+
+                        let cards = document.querySelector(".cards")
+                        // console.log(cards)
+                        cards.innerHTML += `
+                            <div class="card">
+                            <div class="card_photo">
+                            <img src="${weather_logo}"
+                                alt="">
+                            </div>
+                            <h1>${localName}</h1>
+                            <h2>${Wx}</h2>
+                            <div>
+                            <span>最高溫：${maxT} </span><br>
+                            <span>最低溫：${minT} </span>
+                            </div>
+                            <br>
+                            <div>天氣舒適度：${parameterName}</div>
+                            </div>`
+                    });
+                });
+            let clock = document.querySelector(".timeclock")
+            let today = new Date();
+            let current_day = today.getFullYear() + "年" + (today.getMonth() + 1) + "月" + today.getDate() + "日";
+            let current_day_time = today.getHours() + "時" + today.getMinutes() + "分" ;
+            clock.innerHTML += `${current_day + current_day_time}`
+        </script>
+</body>
+
+</html>
